@@ -9,9 +9,8 @@ import {
 import { DBAccount, TMappedDBAccounts } from "../types/Account";
 import useAccountsBalances from "@/hooks/useAccountsBalances";
 import { isAddress } from "web3-validator";
-import accountExists from "@/utils/accountExists";
+import { accountExists } from "@/api/ethers";
 import useEthPrice from "@/hooks/useEthPrice";
-
 
 export default function useAccounts() {
   const [initialAccsRequest, setInitialAccsRequest] = useState(false);
@@ -61,7 +60,7 @@ export default function useAccounts() {
       return;
     }
 
-    const accExists = accountExists(newAccountAddress);
+    const accExists = await accountExists(newAccountAddress);
     if (!accExists) {
       alert("ETH Account does not exist");
       return;

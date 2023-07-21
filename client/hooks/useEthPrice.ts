@@ -1,8 +1,9 @@
 import { useFetch } from "usehooks-ts";
 import type { FetchHookState, EthPriceFetch } from "../types/Requests";
+import { getEthPriceEndpoint } from "@/api/ethers";
 
 const useEthPrice = () => {
-  const endpoint = `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_KEY}`;
+  const endpoint = getEthPriceEndpoint();
   const ethPriceFetch: FetchHookState<EthPriceFetch> = useFetch(endpoint);
   const currentEthUsdRate = Number(ethPriceFetch?.data?.result?.ethusd) || 0;
   const currentEthEurRate = currentEthUsdRate * 0.9;

@@ -1,14 +1,13 @@
 import { formatEther } from "@ethersproject/units";
 import { useFetch } from "usehooks-ts";
-import { TMappedDBAccounts } from "../types/Account";
-import type { FetchHookState, AccountsBalancesFetch } from "../types/Requests";
+import { getMultipleBalancesEndpoint } from "@/api/ethers";
+import { TMappedDBAccounts } from "@/types/Account";
+import type { FetchHookState, AccountsBalancesFetch } from "@/types/Requests";
 
 const useAccountsBalances = ({ accounts }: { accounts: TMappedDBAccounts }) => {
   const addresses = Object.keys(accounts);
   const endpoint = addresses.length
-    ? `https://api.etherscan.io/api?module=account&action=balancemulti&address=${addresses.join(
-        ",",
-      )}&tag=latest&apikey=${process.env.NEXT_PUBLIC_ETHERSCAN_KEY}`
+    ? getMultipleBalancesEndpoint(addresses)
     : undefined;
   const accsBalances: FetchHookState<AccountsBalancesFetch> =
     useFetch(endpoint);
