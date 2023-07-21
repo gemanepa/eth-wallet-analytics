@@ -31,9 +31,18 @@ type AccountTransactionsFetch = {
   }[];
 };
 
+type CreateAccountDto = {
+  address: string;
+  favorite: boolean;
+  dateAdded: string;
+  customRate: { usd: number | null; eur: number | null };
+};
+
 export type {
   FetchHookState,
   EthPriceFetch,
   AccountsBalancesFetch,
   AccountTransactionsFetch,
+  CreateAccountDto,
+  UpdateAccountDto,
 };

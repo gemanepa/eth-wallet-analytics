@@ -35,23 +35,6 @@ function CustomCurrencyFields({
       currency === "EUR" ? amount * EUR_TO_USD_RATE : amount,
     );
     setIsCustomizingExchangeRate(false);
-    /*       fetch('YOUR_BACKEND_API_URL', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount, currency }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle the response data from the backend if needed
-          console.log('Backend response:', data);
-            setIsLoading(false);
-        })
-        .catch((error) => {
-          // Handle errors from the backend if needed
-          console.error('Error:', error);
-        }); */
   };
 
   return (

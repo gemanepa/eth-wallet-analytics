@@ -10,6 +10,7 @@ import {
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { Account } from './schemas/account.schema';
 
 @Controller('account')
 export class AccountController {
@@ -26,17 +27,17 @@ export class AccountController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Account> {
+    return this.accountService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountService.update(+id, updateAccountDto);
+    return this.accountService.update(id, updateAccountDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountService.remove(+id);
+  async delete(@Param('id') id: string) {
+    return this.accountService.delete(id);
   }
 }

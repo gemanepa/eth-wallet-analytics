@@ -1,31 +1,21 @@
 "use client";
-import { useState } from "react";
-import { DBAccounts } from "../types/Account";
+import { useState, useEffect } from "react";
+import {
+  getAllAccounts,
+  createAccount,
+  deleteAccount,
+  updateAccount,
+} from "@/api/server";
+import { DBAccount, TMappedDBAccounts } from "../types/Account";
 import useAccountsBalances from "@/hooks/useAccountsBalances";
 import { isAddress } from "web3-validator";
 import accountExists from "@/utils/accountExists";
 import useEthPrice from "@/hooks/useEthPrice";
 
-const beData = {
-  "0xddbd2b932c763ba5b1b7ae3b362eac3e8d40121a": {
-    favorite: false,
-    dateAdded: "2021-09-01T00:00:00.000Z",
-    customRate: null,
-  },
-  "0x63a9975ba31b0b9626b34300f7f627147df1f526": {
-    favorite: false,
-    dateAdded: "2019-08-01T00:00:00.000Z",
-    customRate: null,
-  },
-  "0x198ef1ec325a96cc354c7266a038be8b5c558f67": {
-    favorite: false,
-    dateAdded: "2021-04-01T00:00:00.000Z",
-    customRate: null,
-  },
-};
 
 export default function useAccounts() {
-  const [accounts, setAccounts] = useState<DBAccounts>(beData);
+  const [initialAccsRequest, setInitialAccsRequest] = useState(false);
+  const [accounts, setAccounts] = useState<TMappedDBAccounts>({});
   const { currentEthUsdRate, currentEthEurRate } = useEthPrice();
   const accsBalances = useAccountsBalances({ accounts });
 
@@ -36,6 +26,22 @@ export default function useAccounts() {
     usd: acc.balance * (acc.customRate.usd || currentEthUsdRate),
     eur: acc.balance * (acc.customRate.eur || currentEthEurRate),
   }));
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      const fetchedAccounts = await getAllAccounts();
+      const accsObj: TMappedDBAccounts = {};
+      fetchedAccounts.forEach((acc: DBAccount) => {
+        accsObj[acc.address] = acc;
+      });
+
+      setAccounts(accsObj);
+      setInitialAccsRequest(true);
+    };
+    if (!initialAccsRequest) {
+      fetchAccounts();
+    }
+  }, [accounts, initialAccsRequest]);
 
   const onAddAccount = async () => {
     if (!newAccountAddress) {
@@ -63,39 +69,59 @@ export default function useAccounts() {
 
     const newAccount = {
       [newAccountAddress]: {
+        address: newAccountAddress,
         favorite: false,
         dateAdded: new Date().toISOString(),
-        customRate: null,
+        customRate: { usd: null, eur: null },
       },
     };
-    setAccounts({ ...accounts, ...newAccount });
+    const newBEAcc: DBAccount = await createAccount(
+      newAccount[newAccountAddress],
+    );
+
+    const accsObj: TMappedDBAccounts = { ...accounts };
+    [newBEAcc].forEach((acc: DBAccount) => {
+      accsObj[acc.address] = acc;
+    });
+
+    setAccounts(accsObj);
     setNewAccountAddress("");
   };
 
-  const removeAccount = (accAdress: string) => {
+  const removeAccount = async (accAdress: string) => {
     const newAccounts = { ...accounts };
     delete newAccounts[accAdress];
+    await deleteAccount(accounts[accAdress]._id);
     setAccounts(newAccounts);
   };
 
   const setCustomRate = (accAdress: string, price: number) => {
+    if (typeof price !== "number" || price <= 0) {
+      alert("Price must be a number and greater than 0");
+    }
     const newAccounts = { ...accounts };
     newAccounts[accAdress].customRate = {
       usd: price,
       eur: price * 0.9,
     };
+    updateAccount(newAccounts[accAdress]._id, newAccounts[accAdress]);
     setAccounts(newAccounts);
   };
 
   const removeCustomRate = (accAdress: string) => {
     const newAccounts = { ...accounts };
-    newAccounts[accAdress].customRate = null;
+    newAccounts[accAdress].customRate = {
+      usd: null,
+      eur: null,
+    };
+    updateAccount(newAccounts[accAdress]._id, newAccounts[accAdress]);
     setAccounts(newAccounts);
   };
 
   const toggleFavorite = (accAdress: string) => {
     const newAccounts = { ...accounts };
     newAccounts[accAdress].favorite = !newAccounts[accAdress].favorite;
+    updateAccount(newAccounts[accAdress]._id, newAccounts[accAdress]);
     setAccounts(newAccounts);
   };
 

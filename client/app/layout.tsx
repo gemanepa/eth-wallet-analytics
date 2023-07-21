@@ -26,7 +26,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const metadata: Metadata = {
-  title: "Securitize Full Stack Developer Assignment",
+  title: "Assignment S********e FS Developer",
   description: "Assignment of Gabriel Martinez Canepa",
 };
 

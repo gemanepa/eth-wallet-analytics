@@ -60,7 +60,9 @@ const AccountCard: React.FC<AccountCardProps> = ({
               }
             />
             <RemoveCustomRateButton
-              hasCustomRate={!account.customRate}
+              hasCustomRate={Boolean(
+                account.customRate.usd || account.customRate.eur,
+              )}
               removeCustomRate={() => removeCustomRate(account.address)}
             />
           </div>
