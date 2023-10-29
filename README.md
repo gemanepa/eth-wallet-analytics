@@ -1,9 +1,46 @@
-# Full Stack Developer Assignment
+# Ethereum Wallet Analytics
 
-This is a monorepo project that contains both the frontend and backend applications. The frontend/client is built using React Hooks + Next.js + Tailwind, while the backend/server is developed using NestJS + Mongoose + MongoDB
+A Fullstack Javascript (NextJS + NestjS) Digital Wallet Dashboard that provides analytics on Ethereum wallets. It allows users to manage and analyze their Ethereum wallet addresses. The application interacts with the Etherscan API to retrieve wallet information.
+
+## Features
+
+1. **Add Wallet Addresses**
+
+   - Allows users to add Ethereum wallet addresses to the platform.
+
+2. **Display Wallet Addresses**
+
+   - Displays the added wallet addresses for user reference.
+
+3. **Favorite Wallets**
+
+   - Enables users to mark specific wallet addresses as favorites.
+
+4. **Sorting Wallets**
+
+   - Permits users to sort the wallet addresses based on their preferences.
+
+5. **Identify Old Wallets**
+
+   - The application identifies and labels wallets as "old" if their first transaction occurred at least one year ago.
+
+6. **Get Exchange Rates**
+
+   - Provides the functionality to fetch exchange rates from Euro and US Dollar to ETH (Ethereum).
+   - Offers the option to store these exchange rates in-memory or in a preferred database.
+
+7. **Edit Exchange Rates**
+
+   - Allows users to edit the exchange rate of Euro or US Dollar to ETH.
+
+8. **Calculate Balance in Selected Currency**
+   - Given a currency (Euro or US Dollar), calculates the balance of ETH in the wallet in the selected currency using the exchange rates from step 6.
 
 ### Getting Started
 
+This is a monorepo project that contains both the frontend and backend applications.
+The frontend/client is built using React Hooks + Next.js + Tailwind.
+The backend/server is developed using NestJS + Mongoose + MongoDB.
 To run both applications, follow these steps:
 
 #### Frontend
